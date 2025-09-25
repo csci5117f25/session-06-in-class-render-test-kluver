@@ -14,5 +14,18 @@
 {% if name %}
 <h2>and hello to {{name}}</h2>
 {% endif %}
+
+<form action="/submit" method="post">
+    <input type="text" required name="name" placeholder="name">
+    <textarea name="text"></textarea>
+    <button type="submit">submit</button>
+</form>
+
+{% for entry in guestbook %}
+<div>
+    <h5>{{entry.name}}</h5>
+    <div style="white-space-collapse: preserve;">{{entry.text}}</div>
+</div>
+{% endfor %}
 </body>
 </html>
