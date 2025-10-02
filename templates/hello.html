@@ -15,6 +15,17 @@
 <h2>and hello to {{name}}</h2>
 {% endif %}
 
+{% if session %}
+<h1>SESSION EXISTS</h1>
+<code>
+    <pre>
+        {{session | tojson}}
+    </pre>
+</code>
+{% else %}
+<h1>NO SESSION</h1>
+{% endif %}
+
 <form action="/submit" method="post">
     <input type="text" required name="name" placeholder="name">
     <textarea name="text"></textarea>
