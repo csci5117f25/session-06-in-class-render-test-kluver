@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, send_file
 import os
+import io
 import db
 import json
 from urllib.parse import quote_plus, urlencode
@@ -76,5 +77,30 @@ def hello(name=None):
 def submit():
     name = request.form.get("name")
     text = request.form.get("text")
+    print(request.files)
+    print(len(request.files))
+    file = request.files["image"]
+    print(file.filename)
+
+    with db.get_db_cursor(True) as cur:
+        cur.execute(
+            "insert into images (contents) values (%s) returning id;", (file.read(),)
+        )
+        print(next(cur))
+
     db.add_post(name, text)
     return render_template("hello.html", name=None, guestbook=db.get_guestbook())
+
+
+@app.route("/images/<int:image_id>")
+def get_image(image_id):
+    # (get a cursor "cur")
+    with db.get_db_cursor(True) as cur:
+        cur.execute("SELECT * FROM images where id=%s", (image_id,))
+        image_row = cur.fetchone()  # just another way to interact with cursors
+
+        # in memory pyhton IO stream
+        stream = io.BytesIO(image_row["contents"])
+
+        # use special "send_file" function
+        return send_file(stream, download_name="image")

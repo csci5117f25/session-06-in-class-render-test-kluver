@@ -25,10 +25,11 @@
 {% else %}
 <h1>NO SESSION</h1>
 {% endif %}
-
-<form action="/submit" method="post">
+<img src="/images/1">
+<form action="/submit" method="post" enctype="multipart/form-data">
     <input type="text" required name="name" placeholder="name">
     <textarea name="text"></textarea>
+    <input type="file" name="image">
     <button type="submit">submit</button>
 </form>
 
